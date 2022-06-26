@@ -25,8 +25,8 @@ sed -i 's/^MODULES.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
 mkinitcpio -P
 
 # We revert this with Ansible afterwards
-sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/sshd_config
-sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/sshd_config
+sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 # Enable base services
 systemctl enable NetworkManager
