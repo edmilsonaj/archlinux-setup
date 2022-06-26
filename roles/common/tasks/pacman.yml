@@ -1,0 +1,36 @@
+---
+- name: Enable Pacman QOL enhancements
+  replace:
+    path: /etc/pacman.conf
+    regexp: '{{ item.regexp }}'
+    replace: '{{ item.replace }}'
+  with_items:
+    - { regexp: '^#Color$', replace: 'Color' }
+    - { regexp: '^#VerbosePkgLists$', replace: 'VerbosePkgLists' }
+    - { regexp: '^#ParallelDownloads = 5$', replace: 'ParallelDownloads = 10' }
+
+- name: Update pacman cache
+  pacman:
+    update_cache: yes
+
+- name: Install Arch package utilities
+  pacman:
+    name:
+      - namcap
+      - pacman-contrib
+      - pkgfile
+    state: present
+
+- name: Add paccache hooks
+  copy:
+    src: '{{ item }}'
+    dest: /etc/pacman.d/hooks/
+  with_items:
+    - files/99-paccache_remove.hook
+    - files/99-paccache_upgrade.hook
+
+- name: Enable pkgfile timer
+  systemd:
+    name: pkgfile-update.timer
+    enabled: True
+  when: not ansible_check_mode

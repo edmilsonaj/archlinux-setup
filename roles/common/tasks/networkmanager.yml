@@ -1,0 +1,42 @@
+---
+- name: Install networking stack
+  pacman:
+    name:
+      - dhclient
+      - dnsmasq
+      - networkmanager
+    state: present
+
+- name: Disables systemd-networkd if enabled
+  systemd:
+    name: systemd-networkd
+    enabled: no
+    state:  stopped
+
+- name: Configure NetworkManager to use dhclient and dnsmasq
+  copy:
+    src: "{{ item }}"
+    dest: /etc/NetworkManager/conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - dhcp.conf
+    - dns.conf
+  notify:
+    - Restart NetworkManager
+
+- name: Add Polkit rule to manage network connections
+  copy:
+    src: 50-org.freedesktop.NetworkManager.rules
+    dest: /etc/polkit-1/rules.d/
+    owner: root
+    group: root
+  notify:
+    - Restart NetworkManager
+
+- name: Enable NetworkManager
+  systemd:
+    name: NetworkManager
+    enabled: yes
+    state:  started

@@ -1,0 +1,14 @@
+all:
+  children:
+    workstations:
+      hosts:
+    laptops:
+      hosts:
+        worklaptop:
+          ansible_host: 192.168.0.2
+          ansible_ssh_user: root
+    work:
+      hosts:
+        worklaptop:
+  vars:
+    example_var: example

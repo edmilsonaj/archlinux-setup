@@ -1,0 +1,28 @@
+---
+- name: Enable fstrim
+  systemd:
+    name: fstrim.timer
+    enabled: true
+    state: started
+
+- name: Install libvirt stack
+  pacman:
+    name:
+       - bridge-utils
+       - edk2-ovmf
+       - libvirt
+       - qemu
+       - swtpm
+       - virt-manager
+
+- name: Enable libvirt service
+  systemd:
+    name: libvirtd
+    state: started
+    enabled: yes
+  when: not ansible_check_mode
+
+- name: Enable Nested Virtualization
+  copy:
+    content: "options kvm_{{ cpu_brand }} nested=1"
+    dest: /etc/modprobe.d/kvm_{{ cpu_brand }}.conf
