@@ -1,6 +1,6 @@
 ---
 - name: Enable Pacman QOL enhancements
-  replace:
+  ansible.builtin.replace:
     path: /etc/pacman.conf
     regexp: '{{ item.regexp }}'
     replace: '{{ item.replace }}'
@@ -10,11 +10,11 @@
     - { regexp: '^#ParallelDownloads = 5$', replace: 'ParallelDownloads = 10' }
 
 - name: Update pacman cache
-  pacman:
+  community.general.pacman:
     update_cache: yes
 
 - name: Install Arch package utilities
-  pacman:
+  community.general.pacman:
     name:
       - namcap
       - pacman-contrib
@@ -22,7 +22,7 @@
     state: present
 
 - name: Add paccache hooks
-  copy:
+  ansible.builtin.copy:
     src: '{{ item }}'
     dest: /etc/pacman.d/hooks/
   with_items:
@@ -30,7 +30,7 @@
     - files/99-paccache_upgrade.hook
 
 - name: Enable pkgfile timer
-  systemd:
+  ansible.builtin.systemd:
     name: pkgfile-update.timer
     enabled: True
   when: not ansible_check_mode

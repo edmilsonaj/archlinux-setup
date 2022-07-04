@@ -1,18 +1,22 @@
 ---
 - name: Essential packages - base system
-  pacman:
+  community.general.pacman:
     name:
       - "{{ cpu_brand }}-ucode"
       - base-devel
       - bash-completion
       - btop
-      - cronie
+      - docker
+      - docker-compose
+      - git
       - htop
+      - jq
       - kernel-modules-hook
       - man
       - ncdu
       - neovim
       - p7zip
+      - python-docker
       - rsync
       - tree
       - unrar
@@ -22,7 +26,7 @@
     state: present
 
 - name: Essential packages - hardware tools
-  pacman:
+  community.general.pacman:
     name:
       - dmidecode
       - dosfstools
@@ -33,27 +37,12 @@
     state: present
   when: ansible_facts['virtualization_role'] == 'host'
 
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: auto
-
-- name: Remove iptables if installed
-  pacman:
-    name:
-       - iptables
-    force: yes
-    state: absent
-  when:
-    - ansible_facts.packages['iptables'] is defined
-    - ansible_facts.packages['iptables'] | length != 0
-
 - name: Essential packages - networking
-  pacman:
+  community.general.pacman:
     name:
       - bind-tools
       - inetutils
       - iperf3
-      - iptables-nft
       - iputils
       - nmap
       - speedtest-cli
@@ -61,19 +50,9 @@
       - traceroute
     state: present
 
-- name: Essential packages - devops tools
-  pacman:
-    name:
-      - docker
-      - docker-compose
-      - git
-      - jq
-      - python-docker
-
 - name: Enable docker service
-  systemd:
+  ansible.builtin.systemd:
     name: docker
     enabled: yes
     state:  started
   when: not ansible_check_mode
-

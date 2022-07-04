@@ -1,25 +1,25 @@
 ---
 - name: Install qemu guest agent
-  pacman:
+  community.general.pacman:
     name: qemu-guest-agent
   when: ansible_facts['virtualization_type'] == 'kvm'
 
 - name: Enable qemu guest agent service
-  systemd:
+  ansible.builtin.systemd:
     name: qemu-guest-agent
     enabled: yes
     state: started
   when: ansible_facts['virtualization_type'] == 'kvm'
 
 - name: Install virtualbox guest agent
-  pacman:
+  community.general.pacman:
     name:
       - virtualbox-guest-dkms
       - virtualbox-guest-utils-nox
   when: ansible_facts['virtualization_type'] == 'virtualbox'
 
 - name: Enable virtualbox guest agent service
-  systemd:
+  ansible.builtin.systemd:
     name: vboxservice
     enabled: yes
     state: started

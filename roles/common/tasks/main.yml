@@ -3,17 +3,15 @@
   set_fact:
     cpu_brand: "{{ 'intel' if (ansible_facts['processor'] is search('GenuineIntel')) else 'amd' }}"
 
-- import_tasks: pacman.yml
+- import_tasks: network.yml
 
 - import_tasks: localization.yml
 
-- import_tasks: networkmanager.yml
+- import_tasks: pacman.yml
 
 - import_tasks: ntp.yml
 
 - import_tasks: essential-stuff.yml
-
-- import_tasks: stuff.yml
 
 - import_tasks: virtual.yml
   when: ansible_facts['virtualization_role'] == 'guest'

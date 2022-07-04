@@ -1,17 +1,17 @@
 ---
 - name: Set timezone
-  file:
+  ansible.builtin.file:
     src: "/usr/share/zoneinfo/{{ timezone }}"
     dest: /etc/localtime
     state: link
 
 - name: Copy systemd-timesyncd config
-  template:
+  ansible.builtin.template:
     src: timesyncd.conf.j2
     dest: /etc/systemd/timesyncd.conf
 
 - name: Enable systemd-timesyncd
-  systemd:
+  ansible.builtin.systemd:
     name: systemd-timesyncd
     enabled: true
     state: started

@@ -1,6 +1,17 @@
 ---
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname | default('arch') }}"
+    use: systemd
+  when: not ansible_check_mode
+
+- name: Configure /etc/hosts
+  ansible.builtin.template:
+    src: hosts.j2
+    dest: /etc/hosts
+
 - name: Install networking stack
-  pacman:
+  community.general.pacman:
     name:
       - dhclient
       - dnsmasq
@@ -8,13 +19,13 @@
     state: present
 
 - name: Disables systemd-networkd if enabled
-  systemd:
+  ansible.builtin.systemd:
     name: systemd-networkd
     enabled: no
     state:  stopped
 
 - name: Configure NetworkManager to use dhclient and dnsmasq
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /etc/NetworkManager/conf.d/
     owner: root
@@ -27,7 +38,7 @@
     - Restart NetworkManager
 
 - name: Add Polkit rule to manage network connections
-  copy:
+  ansible.builtin.copy:
     src: 50-org.freedesktop.NetworkManager.rules
     dest: /etc/polkit-1/rules.d/
     owner: root
@@ -36,7 +47,7 @@
     - Restart NetworkManager
 
 - name: Enable NetworkManager
-  systemd:
+  ansible.builtin.systemd:
     name: NetworkManager
     enabled: yes
     state:  started
