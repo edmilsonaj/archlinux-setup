@@ -27,7 +27,7 @@
     src: 60-ioschedulers.rules
     dest: /etc/udev/rules.d/
 
-- name: Essential packages - hardware tools
+- name: Hardware monitoring tools
   community.general.pacman:
     name:
       - dmidecode

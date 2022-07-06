@@ -1,0 +1,6 @@
+timezone: America/Sao_Paulo
+ntpserver: pool.ntp.br
+locales:
+  - en_US.UTF-8 UTF-8
+  - pt_BR.UTF-8 UTF-8
+computer_hostname: virtual

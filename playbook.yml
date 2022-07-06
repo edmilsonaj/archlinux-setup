@@ -1,9 +1,11 @@
 #!/usr/bin/env ansible-playbook
-
 # Execute this playbook as `./playbook.yml`
 
-- hosts: all
+- hosts: localhost
+  connection: local
   become: yes
+  vars_files:
+    - vars.yml
   roles:
     - role: common
       tags: common

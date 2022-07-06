@@ -11,8 +11,6 @@
 
 - import_tasks: ntp.yml
 
-- import_tasks: essential-stuff.yml
-
 - import_tasks: virtual.yml
   when: ansible_facts['virtualization_role'] == 'guest'
 
@@ -20,3 +18,9 @@
   when: ansible_facts['virtualization_role'] == 'host'
 
 - import_tasks: aur.yml
+
+- name: Disable beep
+  community.general.kernel_blacklist:
+    name: pcspkr
+    state: present
+  become: yes

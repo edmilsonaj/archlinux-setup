@@ -1,7 +1,7 @@
 ---
 - name: Set hostname
   ansible.builtin.hostname:
-    name: "{{ inventory_hostname | default('arch') }}"
+    name: "{{ computer_hostname | default('arch') }}"
     use: systemd
   when: not ansible_check_mode
 
@@ -10,12 +10,20 @@
     src: hosts.j2
     dest: /etc/hosts
 
-- name: Install networking stack
+- name: Install networking packages
   community.general.pacman:
     name:
+      - bind-tools
       - dhclient
       - dnsmasq
+      - inetutils
+      - iperf3
+      - iputils
       - networkmanager
+      - nmap
+      - speedtest-cli
+      - tcpdump
+      - traceroute
     state: present
 
 - name: Disables systemd-networkd if enabled
