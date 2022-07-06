@@ -25,18 +25,6 @@
       - zip
     state: present
 
-- name: Essential packages - hardware tools
-  community.general.pacman:
-    name:
-      - dmidecode
-      - dosfstools
-      - exfatprogs
-      - lm_sensors
-      - ntfs-3g
-      - nvme-cli
-    state: present
-  when: ansible_facts['virtualization_role'] == 'host'
-
 - name: Essential packages - networking
   community.general.pacman:
     name:
