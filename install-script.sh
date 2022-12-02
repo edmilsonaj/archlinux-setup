@@ -3,7 +3,7 @@
 
 EFIPART=/dev/vda1
 CRYPTPART=/dev/vda2
-MAPPERNAME=Linux
+MAPPERNAME=ArchLinux
 
 # Creates the encrypted volume
 cryptsetup --cipher aes-xts-plain64 --hash sha512 --use-random --verify-passphrase luksFormat "$CRYPTPART"
@@ -33,10 +33,10 @@ mount -o relatime,compress=zstd:3,ssd,space_cache=v2,discard=async,subvol=@.snap
 mount "$EFIPART" /mnt/boot
 
 # Change to my pessoal pacman cache server
-echo "Server = http://192.168.100.204:5200/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+echo "Server = http://192.168.100.212:5200/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
 # Packages for base install
-pacstrap /mnt ansible base base-devel bash-completion btrfs-progs git iptables-nft linux-firmware linux-zen linux-zen-headers neovim networkmanager openssh refind
+pacstrap /mnt ansible base base-devel bash-completion btrfs-progs git iptables-nft linux-firmware linux-zen linux-zen-headers man neovim networkmanager openssh refind rsync
 
 # Create the fstab on the new system
 genfstab -U /mnt > /mnt/etc/fstab
@@ -78,11 +78,16 @@ menuentry "Arch Linux Zen" {
     volume  "EFI"
     loader  /vmlinuz-linux-zen
     initrd  /initramfs-linux-zen.img
-    options "rd.luks.name=$UUID=Linux root=/dev/mapper/Linux rootflags=subvol=@ rw quiet"
+    options "rd.luks.name=$UUID=$MAPPERNAME root=/dev/mapper/$MAPPERNAME rootflags=subvol=@ rw quiet"
 
     submenuentry "Boot using fallback initramfs" {
         initrd /initramfs-linux-zen-fallback.img
     }
+}
+
+menuentry "Windows" {
+   icon /EFI/refind/icons/os_win8.png
+   loader /EFI/Microsoft/Boot/bootmgfw.efi
 }
 
 EOF
