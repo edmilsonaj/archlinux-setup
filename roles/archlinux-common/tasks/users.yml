@@ -1,0 +1,14 @@
+---
+
+
+- name: Create Users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    append: yes
+    create_home: yes
+    shell: "/bin/bash"
+    comment: "{{ item.comment }}"
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"

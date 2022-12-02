@@ -1,0 +1,4 @@
+- name: Essential packages - base system
+  community.general.pacman:
+    name: "{{ essential_packages }}"
+    state: present

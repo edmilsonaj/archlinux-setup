@@ -1,5 +1,5 @@
 ---
-- name: Create locale.gen
+- name: Create /etc/locale.gen
   ansible.builtin.template:
     src: locale.gen.j2
     dest: /etc/locale.gen
@@ -12,11 +12,5 @@
 
 - name: Configure languages
   ansible.builtin.copy:
-    content: |
-      LANG=en_US.UTF-8
-      LC_NUMERIC=pt_BR.UTF-8
-      LC_TIME=pt_BR.UTF-8
-      LC_MONETARY=pt_BR.UTF-8
-      LC_PAPER=pt_BR.UTF-8
-      LC_MEASUREMENT=pt_BR.UTF-8
+    content: "{{ language }}"
     dest: /etc/locale.conf

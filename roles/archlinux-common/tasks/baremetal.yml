@@ -10,24 +10,12 @@
     content: "options kvm_{{ cpu_brand }} nested=1"
     dest: /etc/modprobe.d/kvm_{{ cpu_brand }}.conf
 
-- name: Check for rEFInd config file
-  ansible.builtin.stat:
-    path: /boot/EFI/refind/refind.conf
-  register: refind
-
-- name: Install rEFInd hook
-  ansible.builtin.copy:
-    src: refind.hook
-    dest: /etc/pacman.d/hooks/
-  when:
-    - refind.stat.exists
-
 - name: Enable optimized disk schedulers
   ansible.builtin.copy:
     src: 60-ioschedulers.rules
     dest: /etc/udev/rules.d/
 
-- name: Hardware monitoring tools
+- name: Hardware monitoring/diagnostic tools
   community.general.pacman:
     name:
       - dmidecode

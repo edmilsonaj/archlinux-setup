@@ -17,10 +17,18 @@
 - import_tasks: baremetal.yml
   when: ansible_facts['virtualization_role'] == 'host'
 
-- import_tasks: aur.yml
+- import_tasks: refind.yml
 
 - name: Disable beep
-  community.general.kernel_blacklist:
-    name: pcspkr
+  ansible.builtin.copy:
+    content: 'blacklist pcspkr'
+    dest: /etc/modprobe.d/nobeep.conf
+
+- name: Essential packages - base system
+  community.general.pacman:
+    name: "{{ essential_packages }}"
     state: present
-  become: yes
+
+# - import_tasks: users.yml
+
+- import_tasks: aur.yml
