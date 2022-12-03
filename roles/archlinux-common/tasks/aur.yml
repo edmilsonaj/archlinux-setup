@@ -1,18 +1,4 @@
 ---
-- name: Make sure we have a 'wheel' group
-  ansible.builtin.group:
-    name: wheel
-    state: present
-
-- name: Allow wheel group to execute sudo
-  ansible.builtin.blockinfile:
-    path: /etc/sudoers.d/00-sudo
-    block: |
-       %wheel ALL=(ALL) ALL
-       %wheel ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown
-    create: yes
-    validate: 'visudo -cf %s'
-
 - name: Create AUR user
   ansible.builtin.user:
     name: "{{ aur_build_user }}"
@@ -26,7 +12,7 @@
     create: yes
     validate: 'visudo -cf %s'
 
-- name: install paru from AUR
+- name: Install paru from AUR
   kewlfft.aur.aur:
     name: paru
     use: makepkg
@@ -35,9 +21,9 @@
   become: yes
   become_user: "{{ aur_build_user }}"
 
-- name: install paru from AUR
+- name: Install neovim symlinks
   kewlfft.aur.aur:
-    name: "{{ aur_base_packages }}"
+    name: neovim-symlinks
     use: paru
     state: present
     aur_only: yes

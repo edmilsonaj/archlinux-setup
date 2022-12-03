@@ -1,0 +1,14 @@
+---
+  - name: Make sure we have a 'wheel' group
+    ansible.builtin.group:
+      name: wheel
+      state: present
+
+  - name: Allow wheel group to execute sudo
+    ansible.builtin.blockinfile:
+      path: /etc/sudoers.d/00-sudo
+      block: |
+         %wheel ALL=(ALL) ALL
+         %wheel ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown
+      create: yes
+      validate: 'visudo -cf %s'

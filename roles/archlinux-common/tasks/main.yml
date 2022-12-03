@@ -11,13 +11,13 @@
 
 - import_tasks: ntp.yml
 
+- import_tasks: sudo.yml
+
 - import_tasks: virtual.yml
   when: ansible_facts['virtualization_role'] == 'guest'
 
 - import_tasks: baremetal.yml
   when: ansible_facts['virtualization_role'] == 'host'
-
-- import_tasks: refind.yml
 
 - name: Disable beep
   ansible.builtin.copy:
@@ -26,9 +26,26 @@
 
 - name: Essential packages - base system
   community.general.pacman:
-    name: "{{ essential_packages }}"
+    name:
+      - "{{ cpu_brand }}-ucode"
+      - base-devel
+      - bash-completion
+      - btop
+      - htop
+      - jq
+      - kernel-modules-hook
+      - man
+      - ncdu
+      - neovim
+      - p7zip
+      - python-docker
+      - rsync
+      - tree
+      - unrar
+      - unzip
+      - wget
+      - zip
+      - zstd
     state: present
-
-# - import_tasks: users.yml
 
 - import_tasks: aur.yml

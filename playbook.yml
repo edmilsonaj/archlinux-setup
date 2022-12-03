@@ -7,5 +7,5 @@
   vars_files:
     - vars.yml
   roles:
-    - role: common
-      tags: common
+    - role: archlinux-common
+    # - role: desktop
