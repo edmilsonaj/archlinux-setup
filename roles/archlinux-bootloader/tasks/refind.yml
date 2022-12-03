@@ -1,9 +1,4 @@
 ---
-- name: Check for rEFInd config file
-  ansible.builtin.stat:
-    path: /boot/EFI/refind/refind.conf
-  register: refind
-
 - name: Install rEFInd hook
   ansible.builtin.copy:
     src: refind.hook
